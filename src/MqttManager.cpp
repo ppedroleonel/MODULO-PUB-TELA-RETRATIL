@@ -279,3 +279,13 @@ int obterTotalTopicosRecebimento()
 {
     return TOTAL_TOPICOS_PUBLICAR;
 }
+
+void publicarJsonNoTopico(int indiceTopico, const String& jsonString)
+{
+
+}
+
+void publicarJson(const char* topico, const JsonDocument& doc)
+{
+  
+}

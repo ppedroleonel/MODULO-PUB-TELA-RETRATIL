@@ -89,15 +89,27 @@ void tratarJsonComando(const String &mensagem)
     return;
   }
 
-  if (doc["lampada"].is<bool>())
+  if (doc[].is<bool>())
   {
-    bool lampada = doc["lampada"].as<bool>();
+    bool  = doc[""].as<bool>();
 
   }
   else
   {
-    debugErro("Checar a conexão da lampamda com o LED");
+    debugErro("");
     debugErro("Checar erro no JSON");
   }
   
+}
+
+void publicarJson()
+{
+  JsonDocument doc;
+
+  doc[""] = ;
+
+  String jsonString;
+  serializeJson(doc, jsonString);
+
+  publicarMensagemNoTopico(0, jsonString.c_str());
 }
