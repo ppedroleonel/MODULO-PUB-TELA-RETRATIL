@@ -3,7 +3,7 @@
  *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil 
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.0.2
+ *  Versão: 0.0.3
  */
 
 #include <Arduino.h>
@@ -12,103 +12,56 @@
 #include "DebugManager.h"
 #include <ArduinoJson.h>
 #include <secrets.h>
+#include <Bounce2.h>
 
 //==============================
 //* Variavel Global
 
+const int pinoUp = 0;
+const int pinoDown = 5;
+const int pinoPause = 12;
 
 //==============================
+//* Criação de objetos
 
-//==============================
-//* FUNÇÃO
-
-void tratarMensagemRecebida(const char *topico, const String &mensagem);
-void tratarJsonComando(const String &mensagem);
-
-//==============================
-
+Bounce UP = Bounce();
+Bounce DOWN = Bounce();
+Bounce PAUSE = Bounce();
 
 void setup()
 {
   configurarDebug();
   conectarWiFi();
   configurarMQTT();
-  registrarCallBackMensagem(tratarMensagemRecebida);
   conectarMQTT();
+
+  UP.attach(pinoUp, INPUT_PULLUP);
+  DOWN.attach(pinoDown, INPUT_PULLUP);
+  PAUSE.attach(pinoPause, INPUT_PULLUP);
 }
 
 void loop()
 {
-
   garantirWiFiConectado();
   garantirMQTTConectado();
   loopMQTT();
 
-}
+  UP.update();
+  DOWN.update();
+  PAUSE.update();
 
-void tratarMensagemRecebida(const char *topico, const String &mensagem)
-{
-  debugInfo("==================================");
-  debugInfo("Mensagem recebida na aplicação");
-  debugInfo("==================================");
-
-  if (topico == nullptr)
+  if(UP.fell())
   {
-    debugErro("Tópico MQTT inválido");
-    return;
+    postarBotaoUp();
   }
 
-  debugInfo("Tópico: " + String(topico));
-  debugInfo("Mensagem " + mensagem);
-
-  debugInfo(String(strcmp(topico, TOPICO_COMANDO)));
-
-  if (strcmp(topico, TOPICO_COMANDO) == 0)
+  if(DOWN.fell())
   {
-    tratarJsonComando(mensagem);
-    return;
+    postarBotaoDown();
   }
 
-  debugErro("Tópico näo tratado: " + String(topico));
-}
-
-
-
-void postarBotãoDown()
-{
-  JsonDocument doc;
-
-  doc["telaRetatil"]["UP"] = 0;
-  doc["telaRetratil"]["PAUSE"] = 0;
-  doc["telaRetratil"]["DOWN"] = 1;
-
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
-}
-
- void postarBotãoUp()
-{
-  JsonDocument doc;
-
-  doc["telaRetatil"]["UP"] = 1;
-  doc["telaRetratil"]["PAUSE"] = 0;
-  doc["telaRetratil"]["DOWN"] = 0;
-
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
-}
-
-void postarBotãoPause()
-{
-  JsonDocument doc;
-
-  doc["telaRetatil"]["UP"] = 0;
-  doc["telaRetratil"]["PAUSE"] = 1;
-  doc["telaRetratil"]["DOWN"] = 0;
-
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
+  if(PAUSE.fell())
+  {
+    postarBotaoPause();
+  }
 }
