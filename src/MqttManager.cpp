@@ -4,11 +4,13 @@
 #include <WiFiClientSecure.h>
 #include <Arduino.h>
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
 
 #include "secrets.h"
 #include "WiFiManager.h"
 #include "MqttManager.h"
 #include "DebugManager.h"
+
 
 //===============OBJETOS=========
 
@@ -90,7 +92,18 @@ void configurarMQTT()
 
     if (USAR_AWS_IOT)
     {
-        // TODO: IMPLEMENTAR CONEXÃO COM A AWS
+        debugInfo("Modo selecionado: AWS IoT Core");
+        debugInfo("Configurando certificados da AWS IoT Core.");
+
+        wifiClienteSecure.setCACert(AWS_CERT_CA);
+        wifiClienteSecure.setCertificate(AWS_CERT_CRT);
+        wifiClienteSecure.setPrivateKey(AWS_CERT_PRIVATE);
+
+        mqttClient.setClient(wifiClienteSecure);
+        mqttClient.setServer(AWS_IOT_ENDPOINT, AWS_IOT_PORT);
+
+        debugInfo("Endpoint AWS IoT: " + String(AWS_IOT_ENDPOINT));
+        debugInfo("Porta AWS IoT: " + String(AWS_IOT_PORT));
     }
 
     else if (MQTT_USAR_TLS)
@@ -154,8 +167,9 @@ void conectarMQTT()
 
         if (USAR_AWS_IOT)
         {
-            // TODO: Implementar futuramente
+            conectado = mqttClient.connect(AWS_IOT_CLIENT_ID);
         }
+       
         else
         {
             if (strlen(MQTT_USUARIO) > 0)
@@ -172,6 +186,8 @@ void conectarMQTT()
                 conectado = mqttClient.connect(MQTT_CLIENT_ID);
             }
         }
+
+
         if (conectado)
         {
             debugInfo("MQTT conectado com sucesso.");
@@ -280,12 +296,41 @@ int obterTotalTopicosRecebimento()
     return TOTAL_TOPICOS_PUBLICAR;
 }
 
-void publicarJsonNoTopico(int indiceTopico, const String& jsonString)
+void postarBotaoDown()
 {
+  JsonDocument doc;
 
+  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["PAUSE"] = 0;
+  doc["telaRetratil"]["DOWN"] = 1;
+
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagem(TOPICO_COMANDO, texto.c_str());
 }
 
-void publicarJson(const char* topico, const JsonDocument& doc)
+ void postarBotaoUp()
 {
-  
+  JsonDocument doc;
+
+  doc["telaRetatil"]["UP"] = 1;
+  doc["telaRetratil"]["PAUSE"] = 0;
+  doc["telaRetratil"]["DOWN"] = 0;
+
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagem(TOPICO_COMANDO, texto.c_str());
+}
+
+void postarBotaoPause()
+{
+  JsonDocument doc;
+
+  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["PAUSE"] = 1;
+  doc["telaRetratil"]["DOWN"] = 0;
+
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagem(TOPICO_COMANDO, texto.c_str());
 }
