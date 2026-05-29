@@ -26,8 +26,8 @@ void registrarCallBackMensagem(CallbackMensagemMQTT callback);
 
 int obterTotalTopicosRecebimento();
 
-void publicarJsonNoTopico(int indiceTopico, const String& jsonString);
-
-void publicarJson(const char* topico, const JsonDocument& doc);
+void postarBotaoUp();
+void postarBotaoDown();
+void postarBotaoPause();
 
 #endif
