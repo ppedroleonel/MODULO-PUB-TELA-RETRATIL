@@ -300,7 +300,7 @@ void postarBotaoDown()
 {
   JsonDocument doc;
 
-  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["UP"] = 0;
   doc["telaRetratil"]["PAUSE"] = 0;
   doc["telaRetratil"]["DOWN"] = 1;
 
@@ -313,7 +313,7 @@ void postarBotaoDown()
 {
   JsonDocument doc;
 
-  doc["telaRetatil"]["UP"] = 1;
+  doc["telaRetratil"]["UP"] = 1;
   doc["telaRetratil"]["PAUSE"] = 0;
   doc["telaRetratil"]["DOWN"] = 0;
 
@@ -326,7 +326,7 @@ void postarBotaoPause()
 {
   JsonDocument doc;
 
-  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["UP"] = 0;
   doc["telaRetratil"]["PAUSE"] = 1;
   doc["telaRetratil"]["DOWN"] = 0;
 
