@@ -3,7 +3,7 @@
  *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil 
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.0.1
+ *  Versão: 0.0.2
  */
 
 #include <Arduino.h>
@@ -74,42 +74,41 @@ void tratarMensagemRecebida(const char *topico, const String &mensagem)
 
 
 
-void tratarJsonComando(const String &mensagem)
+void postarBotãoDown()
 {
   JsonDocument doc;
 
-  deserializeJson(doc, mensagem);
+  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["PAUSE"] = 0;
+  doc["telaRetratil"]["DOWN"] = 1;
 
-  DeserializationError erro = deserializeJson(doc, mensagem);
-
-  if (erro)
-  {
-    debugErro("Erro ao interpretar o JSON.");
-    debugErro(erro.c_str());
-    return;
-  }
-
-  if (doc[].is<bool>())
-  {
-    bool  = doc[""].as<bool>();
-
-  }
-  else
-  {
-    debugErro("");
-    debugErro("Checar erro no JSON");
-  }
-  
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
 }
 
-void publicarJson()
+ void postarBotãoUp()
 {
   JsonDocument doc;
 
-  doc[""] = ;
+  doc["telaRetatil"]["UP"] = 1;
+  doc["telaRetratil"]["PAUSE"] = 0;
+  doc["telaRetratil"]["DOWN"] = 0;
 
-  String jsonString;
-  serializeJson(doc, jsonString);
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
+}
 
-  publicarMensagemNoTopico(0, jsonString.c_str());
+void postarBotãoPause()
+{
+  JsonDocument doc;
+
+  doc["telaRetatil"]["UP"] = 0;
+  doc["telaRetratil"]["PAUSE"] = 1;
+  doc["telaRetratil"]["DOWN"] = 0;
+
+   String texto;
+  serializeJson(doc, texto);
+  publicarMensagemNoTopico(TOPICO_COMANDO, texto.c_str());
 }
