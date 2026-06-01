@@ -308,9 +308,9 @@ void postarBotaoDown()
   
   JsonDocument doc;
   
-  doc["telaRetratil"]["UP"] = 0;
-  doc["telaRetratil"]["PAUSE"] = 0;
-  doc["telaRetratil"]["DOWN"] = 1;
+  doc["telaRetratil"]["UP"] = false;
+  doc["telaRetratil"]["PAUSE"] = false;
+  doc["telaRetratil"]["DOWN"] = true;
   doc["telaRetratil"]["timestamp"] = carimbo.now();
   doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
@@ -331,9 +331,9 @@ void postarBotaoDown()
   
   JsonDocument doc;
   
-  doc["telaRetratil"]["UP"] = 1;
-  doc["telaRetratil"]["PAUSE"] = 0;
-  doc["telaRetratil"]["DOWN"] = 0;
+  doc["telaRetratil"]["UP"] = true;
+  doc["telaRetratil"]["PAUSE"] = false;
+  doc["telaRetratil"]["DOWN"] = false;
   doc["telaRetratil"]["timestamp"] = carimbo.now();
   doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
@@ -353,9 +353,9 @@ void postarBotaoPause()
   
   JsonDocument doc;
   
-  doc["telaRetratil"]["UP"] = 0;
-  doc["telaRetratil"]["PAUSE"] = 1;
-  doc["telaRetratil"]["DOWN"] = 0;
+  doc["telaRetratil"]["UP"] = false;
+  doc["telaRetratil"]["PAUSE"] = true;
+  doc["telaRetratil"]["DOWN"] = false;
   doc["telaRetratil"]["timestamp"] = carimbo.now();
   doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
