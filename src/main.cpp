@@ -3,7 +3,7 @@
  *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil 
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.0.4
+ *  Versão: 0.1.0
  */
 
 #include <Arduino.h>
