@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include <ezTime.h>
 
 #include "secrets.h"
 #include "WiFiManager.h"
@@ -298,11 +299,20 @@ int obterTotalTopicosRecebimento()
 
 void postarBotaoDown()
 {
-  JsonDocument doc;
+  Timezone carimbo;
 
+  waitForSync();
+
+  carimbo.setLocation("America/Sao_Paulo");
+  setInterval(60);
+  
+  JsonDocument doc;
+  
   doc["telaRetratil"]["UP"] = 0;
   doc["telaRetratil"]["PAUSE"] = 0;
   doc["telaRetratil"]["DOWN"] = 1;
+  doc["telaRetratil"]["timestamp"] = carimbo.now();
+  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
    String texto;
   serializeJson(doc, texto);
@@ -311,11 +321,21 @@ void postarBotaoDown()
 
  void postarBotaoUp()
 {
-  JsonDocument doc;
+  Timezone carimbo;
 
+  waitForSync();
+
+  carimbo.setLocation("America/Sao_Paulo");
+  setInterval(60);
+  
+  
+  JsonDocument doc;
+  
   doc["telaRetratil"]["UP"] = 1;
   doc["telaRetratil"]["PAUSE"] = 0;
   doc["telaRetratil"]["DOWN"] = 0;
+  doc["telaRetratil"]["timestamp"] = carimbo.now();
+  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
    String texto;
   serializeJson(doc, texto);
@@ -324,11 +344,20 @@ void postarBotaoDown()
 
 void postarBotaoPause()
 {
-  JsonDocument doc;
+  Timezone carimbo;
 
+  waitForSync();
+
+  carimbo.setLocation("America/Sao_Paulo");
+  setInterval(60);
+  
+  JsonDocument doc;
+  
   doc["telaRetratil"]["UP"] = 0;
   doc["telaRetratil"]["PAUSE"] = 1;
   doc["telaRetratil"]["DOWN"] = 0;
+  doc["telaRetratil"]["timestamp"] = carimbo.now();
+  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
 
    String texto;
   serializeJson(doc, texto);
