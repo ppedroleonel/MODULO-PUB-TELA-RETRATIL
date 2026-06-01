@@ -17,8 +17,8 @@
 //==============================
 //* Variavel Global
 
-const int pinoUp = 0;
-const int pinoDown = 5;
+const int pinoUp = 10;
+const int pinoDown = 11;
 const int pinoPause = 12;
 
 //==============================
