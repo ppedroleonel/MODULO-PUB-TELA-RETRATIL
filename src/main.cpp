@@ -1,9 +1,9 @@
 /**
  *  Nome: Pedro Leonel de Lorena, Leonardo Ferrarese Correa, Lais Rodrigues Sevilhano & Luigi Arnosti Reginato
- *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil 
+ *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.1.1,
+ *  Versão: 0.1.2,
  */
 
 #include <Arduino.h>
@@ -25,12 +25,12 @@ const int pinoTela = 0;
 //==============================
 //* Criação de objetos
 
-Bounce TELA= Bounce();
+Bounce TELA = Bounce();
 Bounce UP = Bounce();
 Bounce DOWN = Bounce();
 Bounce PAUSE = Bounce();
 
-char tela = 0;
+int8_t tela = 0;
 
 void setup()
 {
@@ -38,7 +38,7 @@ void setup()
   conectarWiFi();
   configurarMQTT();
   conectarMQTT();
-  
+
   TELA.attach(pinoTela, INPUT_PULLUP);
   UP.attach(pinoUp, INPUT_PULLUP);
   DOWN.attach(pinoDown, INPUT_PULLUP);
@@ -50,27 +50,32 @@ void loop()
   garantirWiFiConectado();
   garantirMQTTConectado();
   loopMQTT();
-  
+
   UP.update();
   DOWN.update();
   PAUSE.update();
-  
-  if(UP.fell())
+  TELA.update();
+
+  if (UP.fell())
   {
     postarBotaoUp();
   }
-  
-  if(DOWN.fell())
+
+  if (DOWN.fell())
   {
     postarBotaoDown();
   }
-  
-  if(PAUSE.fell())
+
+  if (PAUSE.fell())
   {
     postarBotaoPause();
   }
 
-  if(TELA.fell()){
+  if (TELA.fell())
+  {
     tela = !tela;
+    postarBotaoPause();
+
+    Serial.println("Tela: " + String(tela));
   }
 }
