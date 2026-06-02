@@ -9,6 +9,8 @@ void conectarMQTT();
 void garantirMQTTConectado();
 void loopMQTT();
 
+extern char tela;
+
 void publicarMensagem(const char* topico, const char* mensagem);
 void publicarMensagemNoTopico(int indiceTopico, const char* mensagem);
 

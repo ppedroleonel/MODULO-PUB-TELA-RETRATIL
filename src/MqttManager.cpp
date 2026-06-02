@@ -12,7 +12,6 @@
 #include "MqttManager.h"
 #include "DebugManager.h"
 
-
 //===============OBJETOS=========
 
 WiFiClient wifiCliente;
@@ -170,7 +169,7 @@ void conectarMQTT()
         {
             conectado = mqttClient.connect(AWS_IOT_CLIENT_ID);
         }
-       
+
         else
         {
             if (strlen(MQTT_USUARIO) > 0)
@@ -187,7 +186,6 @@ void conectarMQTT()
                 conectado = mqttClient.connect(MQTT_CLIENT_ID);
             }
         }
-
 
         if (conectado)
         {
@@ -299,67 +297,69 @@ int obterTotalTopicosRecebimento()
 
 void postarBotaoDown()
 {
-  Timezone carimbo;
+    Timezone carimbo;
 
-  waitForSync();
+    waitForSync();
 
-  carimbo.setLocation("America/Sao_Paulo");
-  setInterval(60);
-  
-  JsonDocument doc;
-  
-  doc["telaRetratil"]["UP"] = false;
-  doc["telaRetratil"]["PAUSE"] = false;
-  doc["telaRetratil"]["DOWN"] = true;
-  doc["telaRetratil"]["timestamp"] = carimbo.now();
-  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+    carimbo.setLocation("America/Sao_Paulo");
+    setInterval(60);
 
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagem(TOPICO_COMANDO, texto.c_str());
+    JsonDocument doc;
+
+    doc["telaRetratil"]["tela"] = tela;
+    doc["telaRetratil"]["UP"] = false;
+    doc["telaRetratil"]["PAUSE"] = false;
+    doc["telaRetratil"]["DOWN"] = true;
+    doc["telaRetratil"]["timestamp"] = carimbo.now();
+    doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+
+    String texto;
+    serializeJson(doc, texto);
+    publicarMensagem(TOPICO_COMANDO, texto.c_str());
 }
 
- void postarBotaoUp()
+void postarBotaoUp()
 {
-  Timezone carimbo;
+    Timezone carimbo;
 
-  waitForSync();
+    waitForSync();
 
-  carimbo.setLocation("America/Sao_Paulo");
-  setInterval(60);
-  
-  
-  JsonDocument doc;
-  
-  doc["telaRetratil"]["UP"] = true;
-  doc["telaRetratil"]["PAUSE"] = false;
-  doc["telaRetratil"]["DOWN"] = false;
-  doc["telaRetratil"]["timestamp"] = carimbo.now();
-  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+    carimbo.setLocation("America/Sao_Paulo");
+    setInterval(60);
 
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagem(TOPICO_COMANDO, texto.c_str());
+    JsonDocument doc;
+
+    doc["telaRetratil"]["tela"] = tela;
+    doc["telaRetratil"]["UP"] = true;
+    doc["telaRetratil"]["PAUSE"] = false;
+    doc["telaRetratil"]["DOWN"] = false;
+    doc["telaRetratil"]["timestamp"] = carimbo.now();
+    doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+
+    String texto;
+    serializeJson(doc, texto);
+    publicarMensagem(TOPICO_COMANDO, texto.c_str());
 }
 
 void postarBotaoPause()
 {
-  Timezone carimbo;
+    Timezone carimbo;
 
-  waitForSync();
+    waitForSync();
 
-  carimbo.setLocation("America/Sao_Paulo");
-  setInterval(60);
-  
-  JsonDocument doc;
-  
-  doc["telaRetratil"]["UP"] = false;
-  doc["telaRetratil"]["PAUSE"] = true;
-  doc["telaRetratil"]["DOWN"] = false;
-  doc["telaRetratil"]["timestamp"] = carimbo.now();
-  doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+    carimbo.setLocation("America/Sao_Paulo");
+    setInterval(60);
 
-   String texto;
-  serializeJson(doc, texto);
-  publicarMensagem(TOPICO_COMANDO, texto.c_str());
+    JsonDocument doc;
+
+    doc["telaRetratil"]["tela"] = tela;
+    doc["telaRetratil"]["UP"] = false;
+    doc["telaRetratil"]["PAUSE"] = true;
+    doc["telaRetratil"]["DOWN"] = false;
+    doc["telaRetratil"]["timestamp"] = carimbo.now();
+    doc["telaRetratil"]["tempo"] = carimbo.dateTime();
+
+    String texto;
+    serializeJson(doc, texto);
+    publicarMensagem(TOPICO_COMANDO, texto.c_str());
 }

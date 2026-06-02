@@ -3,7 +3,7 @@
  *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil 
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.1.0
+ *  Versão: 0.1.1,
  */
 
 #include <Arduino.h>
@@ -20,13 +20,17 @@
 const int pinoUp = 10;
 const int pinoDown = 11;
 const int pinoPause = 12;
+const int pinoTela = 0;
 
 //==============================
 //* Criação de objetos
 
+Bounce TELA= Bounce();
 Bounce UP = Bounce();
 Bounce DOWN = Bounce();
 Bounce PAUSE = Bounce();
+
+char tela = 0;
 
 void setup()
 {
@@ -35,6 +39,7 @@ void setup()
   configurarMQTT();
   conectarMQTT();
   
+  TELA.attach(pinoTela, INPUT_PULLUP);
   UP.attach(pinoUp, INPUT_PULLUP);
   DOWN.attach(pinoDown, INPUT_PULLUP);
   PAUSE.attach(pinoPause, INPUT_PULLUP);
@@ -63,5 +68,9 @@ void loop()
   if(PAUSE.fell())
   {
     postarBotaoPause();
+  }
+
+  if(TELA.fell()){
+    tela = !tela;
   }
 }
