@@ -3,16 +3,17 @@
  *  Descrição: Neste projeto iremos tratar a mensagem que recebemos do json do esp publisher e apos tratar o esp vai realizar as ações da tela retratil
  *  Projeto: MODULO RECEIVER TELA RETRATIL
  *  Data: 21/05/2026
- *  Versão: 0.1.2,
+ *  Versão: 1.0.0
  */
 
 #include <Arduino.h>
-#include "WiFiManager.h"
-#include "MqttManager.h"
-#include "DebugManager.h"
+#include <DebugManager.h>
 #include <ArduinoJson.h>
-#include <secrets.h>
+#include <ESP32Connectivity.h>
 #include <Bounce2.h>
+#include "secrets.h"
+#include "postarJson.h"
+#include "Conectividade.h"
 
 //==============================
 //* Variavel Global
@@ -29,15 +30,15 @@ Bounce TELA = Bounce();
 Bounce UP = Bounce();
 Bounce DOWN = Bounce();
 Bounce PAUSE = Bounce();
+ESP32Connectivity telaRetratil;
 
 int8_t tela = 0;
 
 void setup()
 {
-  configurarDebug();
-  conectarWiFi();
-  configurarMQTT();
-  conectarMQTT();
+  Serial.begin(115200);
+  configurarDebug(DEBUG_NIVEL_INICIAL, PINO_HABILITAR_DEBUG_COMPLETO);
+  telaRetratil.beginAWS(wifiConfig, awsConfig, topicosConfig);
 
   TELA.attach(pinoTela, INPUT_PULLUP);
   UP.attach(pinoUp, INPUT_PULLUP);
@@ -47,9 +48,7 @@ void setup()
 
 void loop()
 {
-  garantirWiFiConectado();
-  garantirMQTTConectado();
-  loopMQTT();
+  telaRetratil.update();
 
   UP.update();
   DOWN.update();
